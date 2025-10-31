@@ -53,8 +53,14 @@ training/
 
 ### ワークフロー
 1. **データ同期**
-   - 端末から `adb pull /data/data/.../files/logos/` 等で画像を取得。
-   - PC側 `training/data/raw/BRAND_NAME/` に配置。
+   - 端末からADBでロゴ画像ディレクトリを吸い上げる。例：
+     ```bash
+     # 端末側保存先（アプリ実装に合わせてパスを調整）
+     adb shell ls /storage/emulated/0/Android/data/com.example.logoocr.debug/files/logos
+     adb pull /storage/emulated/0/Android/data/com.example.logoocr.debug/files/logos ./training/data/raw
+     ```
+   - 端末のデータが内部ストレージ（`/data/data/...`）にある場合はRoot/デバッグビルドが必要になるため、アプリ側で外部ストレージ配下に保存する運用が扱いやすい。
+   - 吸い上げたファイルをブランド名でフォルダ整理（`training/data/raw/BRAND_NAME/*.jpg`）。ラベル情報をCSVやJSONにまとめておくと学習スクリプトで扱いやすい。
 
 2. **前処理スクリプト実行**
    ```bash
