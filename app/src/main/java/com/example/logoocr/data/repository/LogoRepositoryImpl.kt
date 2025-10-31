@@ -27,6 +27,9 @@ class LogoRepositoryImpl @Inject constructor(
     override fun observeRecognitionResult(id: Long): Flow<RecognitionResultEntity?> =
         recognitionResultDao.observeById(id)
 
+    override fun observeAllLogos(): Flow<List<LogoEntity>> =
+        logoDao.observeAll()
+
     override suspend fun upsertBrand(brand: BrandEntity): Long = brandDao.upsert(brand)
 
     override suspend fun upsertLogo(logo: LogoEntity): Long = logoDao.upsert(logo)

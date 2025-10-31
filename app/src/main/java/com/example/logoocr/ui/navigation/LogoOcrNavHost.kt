@@ -11,6 +11,7 @@ import com.example.logoocr.ui.screen.confirm.ConfirmRecognitionScreen
 import com.example.logoocr.ui.screen.history.HistoryScreen
 import com.example.logoocr.ui.screen.main.MainScreen
 import com.example.logoocr.ui.screen.register.RegisterLogoScreen
+import com.example.logoocr.ui.screen.gallery.LogoGalleryScreen
 
 @Composable
 fun LogoOcrNavHost(
@@ -27,6 +28,9 @@ fun LogoOcrNavHost(
             MainScreen(
                 onNavigateToRegister = {
                     navController.navigate(LogoOcrDestination.RegisterLogo.name)
+                },
+                onNavigateToGallery = {
+                    navController.navigate(LogoOcrDestination.LogoGallery.name)
                 },
                 onNavigateToHistory = {
                     navController.navigate(LogoOcrDestination.History.name)
@@ -53,6 +57,12 @@ fun LogoOcrNavHost(
                         LogoOcrDestination.ConfirmRecognition.name + "/$resultId"
                     )
                 }
+            )
+        }
+
+        composable(route = LogoOcrDestination.LogoGallery.name) {
+            LogoGalleryScreen(
+                onBack = { navController.popBackStack() }
             )
         }
 

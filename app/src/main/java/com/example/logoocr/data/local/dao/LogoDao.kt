@@ -12,6 +12,9 @@ interface LogoDao {
     @Query("SELECT * FROM logos WHERE brandId = :brandId ORDER BY registeredAt DESC")
     fun observeLogosByBrand(brandId: Long): Flow<List<LogoEntity>>
 
+    @Query("SELECT * FROM logos ORDER BY registeredAt DESC")
+    fun observeAll(): Flow<List<LogoEntity>>
+
     @Query("SELECT * FROM logos")
     suspend fun getAll(): List<LogoEntity>
 

@@ -4,5 +4,6 @@ enum class LogoOcrDestination {
     Main,
     RegisterLogo,
     ConfirmRecognition,
-    History
+    History,
+    LogoGallery
 }

@@ -55,6 +55,7 @@ import kotlin.coroutines.resume
 fun MainScreen(
     onNavigateToRegister: () -> Unit,
     onNavigateToHistory: () -> Unit,
+    onNavigateToGallery: () -> Unit,
     onNavigateToConfirm: (Long) -> Unit,
     viewModel: MainViewModel = hiltViewModel()
 ) {
@@ -97,6 +98,10 @@ fun MainScreen(
                 actions = {
                     androidx.compose.material3.TextButton(onClick = onNavigateToRegister) {
                         Text("ロゴ登録")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    androidx.compose.material3.TextButton(onClick = onNavigateToGallery) {
+                        Text("ロゴ一覧")
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     androidx.compose.material3.TextButton(onClick = onNavigateToHistory) {

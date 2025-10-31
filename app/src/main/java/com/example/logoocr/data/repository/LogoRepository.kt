@@ -10,6 +10,7 @@ interface LogoRepository {
     fun observeLogos(brandId: Long): Flow<List<LogoEntity>>
     fun observeRecognitionHistory(): Flow<List<RecognitionResultEntity>>
     fun observeRecognitionResult(id: Long): Flow<RecognitionResultEntity?>
+    fun observeAllLogos(): Flow<List<LogoEntity>>
 
     suspend fun upsertBrand(brand: BrandEntity): Long
     suspend fun upsertLogo(logo: LogoEntity): Long
