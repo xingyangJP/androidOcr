@@ -53,13 +53,20 @@ training/
 
 ### ワークフロー
 1. **データ同期**
-   - 端末からADBでロゴ画像ディレクトリを吸い上げる。例：
+   - アプリ仕様：  
+     - カメラ撮影分は `createImageFile()` により `/storage/emulated/0/Android/data/<package>/files/Pictures/`（アプリ専用外部ストレージ）へ保存。  
+     - ギャラリー取り込み分は `context.filesDir/logos/`（内部ストレージ: `/data/data/<package>/files/logos/`）へコピー。
+   - 外部ストレージ側（カメラ撮影分）は通常の `adb pull` で取得可能：
      ```bash
-     # 端末側保存先（アプリ実装に合わせてパスを調整）
-     adb shell ls /storage/emulated/0/Android/data/com.example.logoocr.debug/files/logos
-     adb pull /storage/emulated/0/Android/data/com.example.logoocr.debug/files/logos ./training/data/raw
+     adb shell ls /storage/emulated/0/Android/data/com.example.logoocr.debug/files/Pictures
+     adb pull /storage/emulated/0/Android/data/com.example.logoocr.debug/files/Pictures ./training/data/raw/captured
      ```
-   - 端末のデータが内部ストレージ（`/data/data/...`）にある場合はRoot/デバッグビルドが必要になるため、アプリ側で外部ストレージ配下に保存する運用が扱いやすい。
+   - 内部ストレージ側（ギャラリー分）は `run-as` が利用可能なデバッグビルドで以下のように取り出す：
+     ```bash
+     adb shell run-as com.example.logoocr.debug ls files/logos
+     adb shell run-as com.example.logoocr.debug tar -cf - files/logos | tar -xf - -C ./training/data/raw/gallery
+     ```
+     `run-as` が使えない場合は、アプリ側で外部ストレージへエクスポートする処理やデバッグ用ビルドフラグを用意する。
    - 吸い上げたファイルをブランド名でフォルダ整理（`training/data/raw/BRAND_NAME/*.jpg`）。ラベル情報をCSVやJSONにまとめておくと学習スクリプトで扱いやすい。
 
 2. **前処理スクリプト実行**
