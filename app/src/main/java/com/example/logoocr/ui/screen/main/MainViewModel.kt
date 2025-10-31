@@ -5,6 +5,7 @@ import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.logoocr.core.image.ImageEmbedding
+import com.example.logoocr.core.ml.LogoClassifier
 import com.example.logoocr.data.local.entity.RecognitionResultEntity
 import com.example.logoocr.data.repository.LogoRepository
 import java.io.File
@@ -20,7 +21,8 @@ import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: LogoRepository
+    private val repository: LogoRepository,
+    private val logoClassifier: LogoClassifier
 ) : ViewModel() {
 
     data class RecognitionSummary(
@@ -95,7 +97,8 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun classifyCapturedImage(file: File): RecognitionResult {
-        val embedding = ImageEmbedding.fromFile(file)
+        val embedding = logoClassifier.computeEmbedding(file)
+            ?: ImageEmbedding.fromFile(file)
             ?: return RecognitionResult.Error("画像の読み込みに失敗しました")
 
         val logos = repository.getAllLogos()

@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.logoocr.core.image.ImageEmbedding
+import com.example.logoocr.core.ml.LogoClassifier
 import com.example.logoocr.core.storage.ImageStorage
 import com.example.logoocr.data.local.entity.BrandEntity
 import com.example.logoocr.data.local.entity.LogoEntity
@@ -24,7 +25,8 @@ import java.io.File
 @HiltViewModel
 class RegisterLogoViewModel @Inject constructor(
     private val repository: LogoRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val logoClassifier: LogoClassifier
 ) : ViewModel() {
 
     data class UiState(
@@ -72,7 +74,8 @@ class RegisterLogoViewModel @Inject constructor(
     private suspend fun processImage(uri: Uri, path: String, deleteOnFailure: Boolean) {
         _uiState.update { it.copy(isProcessing = true, errorMessage = null) }
         val embedding = withContext(Dispatchers.IO) {
-            ImageEmbedding.fromFile(File(path))
+            logoClassifier.computeEmbedding(File(path))
+                ?: ImageEmbedding.fromFile(File(path))
         }
         if (embedding == null) {
             if (deleteOnFailure) {
